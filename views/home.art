@@ -10,20 +10,17 @@
 <div class="py-container">
     <div class="yui3-g SortList">
         <div class="yui3-u Center banerArea">
-            {{sliders}}
             <!--banner轮播-->
             <div id="banner" data-ride="carousel" data-interval="4000" class="sui-carousel slide">
                 <ol class="carousel-indicators">
-                    <li data-target="#banner" data-slide-to="0" class="active"></li>
-                    <li data-target="#banner" data-slide-to="1"></li>
-                    <li data-target="#banner" data-slide-to="2"></li>
-                    <li data-target="#banner" data-slide-to="3"></li>
+                    {{each sliders}}
+                    <li data-target="#banner" data-slide-to="{{$index}}" class="{{$index==0?'active':''}}"></li>
+                    {{/each}}
                 </ol>
                 <div class="carousel-inner">
-                    <div class="item active"><a href="#"><img src="/uploads/banner1.jpg"></a></div>
-                    <div class="item"><a href="#"><img src="/uploads/banner2.jpg"></a></div>
-                    <div class="item"><a href="#"><img src="/uploads/banner3.jpg"></a></div>
-                    <div class="item"><a href="#"><img src="/uploads/banner4.jpg"></a></div>
+                    {{each sliders}}
+                    <div class="item {{$index==0?'active':''}}"><a href="{{$value.link}}"><img src="{{$value.image}}"></a></div>
+                    {{/each}}
                 </div>
                 <a href="#banner" data-slide="prev" class="carousel-control left">‹</a>
                 <a href="#banner" data-slide="next" class="carousel-control right">›</a>
@@ -97,36 +94,13 @@
         </div>
         <div class="bd">
             <ul class="clearfix yui3-g Favourate picLB" id="picLBxxl">
+                {{each likes}}
                 <li class="yui3-u-1-6">
-                    <a href="item.html" class="pic"><img src="/uploads/like_01.png"></a>
-                    <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
-                    <h3>¥116.00</h3>
+                    <a href="/item/{{$value.id}}" class="pic"><img src="{{$value.thumbnail}}"></a>
+                    <p>{{$value.name}}</p>
+                    <h3>¥{{$value.price}}</h3>
                 </li>
-                <li class="yui3-u-1-6">
-                    <a href="item.html" class="pic"><img src="/uploads/like_01.png"></a>
-                    <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
-                    <h3>¥116.00</h3>
-                </li>
-                <li class="yui3-u-1-6">
-                    <a href="item.html" class="pic"><img src="/uploads/like_01.png"></a>
-                    <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
-                    <h3>¥116.00</h3>
-                </li>
-                <li class="yui3-u-1-6">
-                    <a href="item.html" class="pic"><img src="/uploads/like_01.png"></a>
-                    <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
-                    <h3>¥116.00</h3>
-                </li>
-                <li class="yui3-u-1-6">
-                    <a href="item.html" class="pic"><img src="/uploads/like_01.png"></a>
-                    <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
-                    <h3>¥116.00</h3>
-                </li>
-                <li class="yui3-u-1-6">
-                    <a href="item.html" class="pic"><img src="/uploads/like_01.png"></a>
-                    <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
-                    <h3>¥116.00</h3>
-                </li>
+                {{/each}}
             </ul>
         </div>
     </div>
