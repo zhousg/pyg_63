@@ -10,6 +10,7 @@
 <div class="py-container">
     <div class="yui3-g SortList">
         <div class="yui3-u Center banerArea">
+            {{sliders}}
             <!--banner轮播-->
             <div id="banner" data-ride="carousel" data-interval="4000" class="sui-carousel slide">
                 <ol class="carousel-indicators">

@@ -4,6 +4,8 @@ const Youch = require('youch')
 const artTemplate = require('express-art-template')
 const path = require('path')
 const favicon = require('express-favicon')
+const middlewares = require('./middlewares')
+const routers = require('./routers')
 
 /*1.创建服务器*/
 const express = require('express')
@@ -26,14 +28,11 @@ app.use(express.urlencoded({extended: false})) //处理url形式的传参 applic
 //网站小图标处理
 app.use(favicon(path.join(__dirname,'./favicon.ico')))
 
+//自定义的中间件
+app.use(middlewares.global)
 
 //定义的业务路由
-app.get('/', (req, res, next) => {
-  //自己创建一个服务器运行异常
-  //throw new Error('服务器异常')
-  //res.send('server ok')
-  res.render('home')
-})
+app.use(routers)
 
 //如果代码执行到这里 没有对象的路由规则  证明是404
 app.use((req, res, next) => {

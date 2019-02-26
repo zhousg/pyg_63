@@ -57,5 +57,9 @@ app.use((err, req, res, next) => {
 })
 ```
 
+### 首页功能
+
+1. head 公用网站信息
+
 
 
