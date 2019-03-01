@@ -6,6 +6,7 @@ const path = require('path')
 const favicon = require('express-favicon')
 const middlewares = require('./middlewares')
 const routers = require('./routers')
+const configs = require('./configs')
 
 /*1.创建服务器*/
 const express = require('express')
@@ -27,6 +28,26 @@ app.use(express.urlencoded({extended: false})) //处理url形式的传参 applic
 //处理请求数据成对象格式 便于操作
 //网站小图标处理
 app.use(favicon(path.join(__dirname,'./favicon.ico')))
+
+
+//配置session
+/*1. 导入  express-session express-mysql-session*/
+const session = require('express-session')
+const mysqlSession = require('express-mysql-session')
+/*2. 获取持久化的构造函数*/
+const MySQLStore = mysqlSession(session)
+/*3. 需要链接mysql信息  配置信息  在configs定义*/
+/*4. 实例化持久化对象*/
+const sessionStore = new MySQLStore(configs.mysql)
+/*5. 配置中间件*/
+app.use(session({
+  key: 'pygSID',  //sessionId
+  secret: 'pyg_63_secret', //加密字符串
+  store: sessionStore, //持久化对象
+  resave: false, //是否重新保存session
+  saveUninitialized: false  //是否在项目初始化的时候实例session 还是在使用session的时候再去初始化
+}))
+
 
 //自定义的中间件
 app.use(middlewares.global)

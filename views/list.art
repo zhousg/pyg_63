@@ -9,13 +9,17 @@
         <!--bread-->
         <div class="bread">
             <ul class="fl sui-breadcrumb">
-                {{if breadcrumb.parent && breadcrumb.parent.parent}}
-                <li><a href="/list/{{breadcrumb.parent.parent.id}}">{{breadcrumb.parent.parent.name}}</a></li>
+                {{if breadcrumb}}
+                    {{if breadcrumb.parent && breadcrumb.parent.parent}}
+                    <li><a href="/list/{{breadcrumb.parent.parent.id}}">{{breadcrumb.parent.parent.name}}</a></li>
+                    {{/if}}
+                    {{if breadcrumb.parent}}
+                    <li><a href="/list/{{breadcrumb.parent.id}}">{{breadcrumb.parent.name}}</a></li>
+                    {{/if}}
+                    <li class="active">{{breadcrumb.name}}</li>
+                {{else}}
+                    <li class="active">搜索 “{{q}}” 的结果</li>
                 {{/if}}
-                {{if breadcrumb.parent}}
-                <li><a href="/list/{{breadcrumb.parent.id}}">{{breadcrumb.parent.name}}</a></li>
-                {{/if}}
-                <li class="active">{{breadcrumb.name}}</li>
             </ul>
         </div>
         <!--selector-->
@@ -51,13 +55,24 @@
             <div class="sui-navbar">
                 <div class="navbar-inner filter">
                     <ul class="sui-nav">
-                        <li class="{{sort=='commend'?'active':''}}"><a href="/list/{{categoryId}}?sort=commend">综合</a></li>
-                        <li class="{{sort=='quantity'?'active':''}}"><a href="/list/{{categoryId}}?sort=quantity">销量</a></li>
-                        <li class="{{sort=='market_time'?'active':''}}"><a href="/list/{{categoryId}}?sort=market_time">新品</a></li>
-                        {{if sort.includes('price')}}
-                        <li class="active"><a href="/list/{{categoryId}}?sort={{sort=='price'?'-price':'price'}}">价格 <i class="sui-icon {{sort=='price'?'icon-tb-unfold':'icon-tb-fold'}}"></i></a></li>
+                        {{if breadcrumb}}
+                            <li class="{{sort=='commend'?'active':''}}"><a href="/list/{{categoryId}}?sort=commend">综合</a></li>
+                            <li class="{{sort=='quantity'?'active':''}}"><a href="/list/{{categoryId}}?sort=quantity">销量</a></li>
+                            <li class="{{sort=='market_time'?'active':''}}"><a href="/list/{{categoryId}}?sort=market_time">新品</a></li>
+                            {{if sort.includes('price')}}
+                            <li class="active"><a href="/list/{{categoryId}}?sort={{sort=='price'?'-price':'price'}}">价格 <i class="sui-icon {{sort=='price'?'icon-tb-unfold':'icon-tb-fold'}}"></i></a></li>
+                            {{else}}
+                            <li><a href="/list/{{categoryId}}?sort=-price">价格</a></li>
+                            {{/if}}
                         {{else}}
-                        <li><a href="/list/{{categoryId}}?sort=-price">价格</a></li>
+                            <li class="{{sort=='commend'?'active':''}}"><a href="/search?q={{q}}&sort=commend">综合</a></li>
+                            <li class="{{sort=='quantity'?'active':''}}"><a href="/search?q={{q}}&sort=quantity">销量</a></li>
+                            <li class="{{sort=='market_time'?'active':''}}"><a href="/search?q={{q}}&sort=market_time">新品</a></li>
+                            {{if sort.includes('price')}}
+                            <li class="active"><a href="/search?q={{q}}&sort={{sort=='price'?'-price':'price'}}">价格 <i class="sui-icon {{sort=='price'?'icon-tb-unfold':'icon-tb-fold'}}"></i></a></li>
+                            {{else}}
+                            <li><a href="/search?q={{q}}&sort=-price">价格</a></li>
+                            {{/if}}
                         {{/if}}
                     </ul>
                 </div>

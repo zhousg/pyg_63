@@ -3,6 +3,7 @@ const productModel = require('../models/product')
 const categoryModel = require('../models/category')
 const paginationUtil = require('../utils/pagination')
 
+//分类列表页
 exports.index = (req, res, next) => {
   //获取分类ID
   //客户端的传参
@@ -37,16 +38,42 @@ exports.index = (req, res, next) => {
   Promise.all([
     productModel.getProductByCategory(id, page, per_page, sort),
     categoryModel.getBreadcrumb(id)
-  ]).then(results=>{
+  ]).then(results => {
     res.locals.list = results[0].list  //列表数据
     res.locals.sort = sort //当前排序
     res.locals.categoryId = id //当前分类ID
     res.locals.breadcrumb = results[1] //面包屑数据
     //分页的HTML格式代码
     res.locals.paginationHTML = paginationUtil({
-      currPage:results[0].currPage,
-      total:results[0].totalPage
+      currPage: results[0].currPage,
+      total: results[0].totalPage,
+      req
     })
     res.render('list')
   }).catch(err => next(err))
+}
+
+//搜索列表页
+exports.search = (req, res, next) => {
+  /*需求：*/
+  /*1. 搜索框显示 搜索的关键字*/
+  /*2. 在面包屑位置  提示文字*/
+  /*3. 重新渲染排序按钮*/
+  /*依赖数据  根据关键字查询的列表数据包含分页即可*/
+  const q = req.query.q
+  const page = req.query.page || 1
+  const per_page = 5
+  const sort = req.query.sort || 'commend'
+  productModel.getProductBySearch(q, page, per_page, sort)
+    .then(data=>{
+      res.locals.list = data.list
+      res.locals.sort = sort
+      res.locals.q = q
+      res.locals.paginationHTML = paginationUtil({
+        currPage: data.currPage,
+        total: data.totalPage,
+        req
+      })
+      res.render('list')
+    }).catch(err => next(err))
 }
