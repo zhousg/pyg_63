@@ -60,6 +60,7 @@ exports.addCartSuc = (req, res, next) => {
 
 //展示购物车页面 不包含数据
 exports.index = (req, res, next) => {
+  res.locals.user = req.session.user
   res.render('cart')
 }
 
@@ -84,6 +85,7 @@ exports.list = (req, res, next) => {
             name: item.name,
             price: item.price,
             thumbnail: item.thumbnail,
+            amount:item.amount,
             num: +cartList[i].num  //结果的顺序和cartList的数据顺序一致的
           }))
         })
@@ -94,3 +96,23 @@ exports.list = (req, res, next) => {
 
   }
 }
+
+//修改商品数量 接口
+exports.edit = (req, res, next) => {
+  // id 商品ID  num 修改后的数量
+  const {id, num} = req.body
+  if (!req.session.user) {
+    // 修改 cookie 数据
+    const cartCookie = req.cookies[configs.cookieCart.key] || '[]'
+    const cartList = JSON.parse(cartCookie)
+    const product = cartList.find((item, i) => item.id == id)
+    product.num = num
+    const expires = new Date(Date.now() + configs.cookieCart.expires)
+    res.cookie(configs.cookieCart.key, JSON.stringify(cartList), {expires})
+    res.json({code: 200, msg: '修改成功'})
+  } else {
+
+  }
+}
+
+//删除 接口

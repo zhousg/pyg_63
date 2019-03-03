@@ -23,6 +23,7 @@ router.get('/cart/add',cartController.addCart)
 router.get('/cart/addSuc',cartController.addCartSuc)
 router.get('/cart',cartController.index)
 router.get('/cart/list',cartController.list)
+router.post('/cart/edit',cartController.edit)
 
 //todo 配置网站所有的路由
 
