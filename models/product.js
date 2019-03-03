@@ -42,3 +42,9 @@ exports.getProductById = (id) =>{
     .catch(err => Promise.reject(err))
 }
 
+//根据ID获取商品基本信息
+exports.getProductBaseById = (id) =>{
+  return axios.get(`products/${id}`)
+    .then(res=>res.data)
+    .catch(err => Promise.reject(err))
+}

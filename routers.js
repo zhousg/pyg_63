@@ -21,6 +21,8 @@ router.get('/item/:id',itemController.index)
 //购物车相关路由
 router.get('/cart/add',cartController.addCart)
 router.get('/cart/addSuc',cartController.addCartSuc)
+router.get('/cart',cartController.index)
+router.get('/cart/list',cartController.list)
 
 //todo 配置网站所有的路由
 

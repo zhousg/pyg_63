@@ -5,6 +5,7 @@
 //判断端用户的登录状态     使用session
 //如果登录成  session  往里面存用户信息  字段约定 user
 const configs = require('../configs')
+const productModel = require('../models/product')
 
 exports.addCart = (req, res, next) => {
   //参数 商品ID
@@ -31,7 +32,8 @@ exports.addCart = (req, res, next) => {
     }
     /*4. 再次去更新cookie购物车数据*/
     const expires = new Date(Date.now() + configs.cookieCart.expires)
-    res.cookie(configs.cookieCart.key,JSON.stringify(cartList),{expires})
+    //res.cookie(key,value,options)
+    res.cookie(configs.cookieCart.key, JSON.stringify(cartList), {expires})
     /*5. 重定向到  展示加入的商品信息页面*/
     res.redirect(`/cart/addSuc?id=${id}&num=${num}`)
   } else {
@@ -40,8 +42,55 @@ exports.addCart = (req, res, next) => {
 }
 
 exports.addCartSuc = (req, res, next) => {
+  //1. 商品信息   根据 ID 去查询
+  //2. 数量 num
+  const {id, num} = req.query
+  productModel.getProductBaseById(id)
+    .then(data => {
+      res.locals.product = {
+        id: data.id,
+        name: data.name,
+        thumbnail: data.thumbnail,
+        num: num
+      }
+      //res.json(res.locals.product)
+      res.render('cart-add')
+    })
+}
 
-  //TODO 渲染刚刚添加的商品级加入的数量
+//展示购物车页面 不包含数据
+exports.index = (req, res, next) => {
+  res.render('cart')
+}
 
-  res.send('ok')
+//提供给浏览器数据的接口
+exports.list = (req, res, next) => {
+  //获取购物数据
+  if (!req.session.user) {
+    //未登录
+    /*1. 获取cookie信息*/
+    const cartCookie = req.cookies[configs.cookieCart.key] || '[]'
+    /*2. 转换对象*/
+    const cartList = JSON.parse(cartCookie)
+    /*3. 这个数据是客户端的要求吗  返回比较详细的商品信息*/
+    /*4. 把购物车对象 转换成 获取商品信息的 promise 对象 组合成 数组*/
+    const promiseArr = cartList.map((item, i) => productModel.getProductBaseById(item.id))
+    Promise.all(promiseArr)
+      .then(results => {
+        res.json({
+          code: 200,
+          data: results.map((item, i) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            thumbnail: item.thumbnail,
+            num: +cartList[i].num  //结果的顺序和cartList的数据顺序一致的
+          }))
+        })
+      }).catch(err => {
+      res.json({code: 500, msg: '获取购物车信息失败'})
+    })
+  } else {
+
+  }
 }
