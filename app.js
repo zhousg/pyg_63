@@ -1,6 +1,7 @@
 //主文件
 const createError = require('http-errors')
 const Youch = require('youch')
+const cookieParser = require('cookie-parser')
 const artTemplate = require('express-art-template')
 const path = require('path')
 const favicon = require('express-favicon')
@@ -48,6 +49,7 @@ app.use(session({
   saveUninitialized: false  //是否在项目初始化的时候实例session 还是在使用session的时候再去初始化
 }))
 
+app.use(cookieParser())
 
 //自定义的中间件
 app.use(middlewares.global)
