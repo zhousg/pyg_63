@@ -30,3 +30,9 @@ exports.cookieCart = {
   key:'pyg63_cart_info',
   expires: 30 * 24 * 60 * 60 * 1000
 }
+
+//自动登录cookie
+exports.cookieUser = {
+  key:'pyg63_user_info',
+  expires: 7 * 24 * 60 * 60 * 1000
+}
