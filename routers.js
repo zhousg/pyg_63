@@ -5,6 +5,7 @@ const homeController = require('./controllers/home')
 const listController = require('./controllers/list')
 const itemController = require('./controllers/item')
 const cartController = require('./controllers/cart')
+const usersController = require('./controllers/users')
 
 //渲染首页
 router.get('/', homeController.index)
@@ -24,6 +25,11 @@ router.get('/cart/addSuc',cartController.addCartSuc)
 router.get('/cart',cartController.index)
 router.get('/cart/list',cartController.list)
 router.post('/cart/edit',cartController.edit)
+router.post('/cart/remove',cartController.remove)
+
+//用户相关
+router.get('/login',usersController.login)
+router.post('/login',usersController.loginLogic)
 
 //todo 配置网站所有的路由
 

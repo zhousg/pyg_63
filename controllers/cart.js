@@ -37,7 +37,7 @@ exports.addCart = (req, res, next) => {
     /*5. 重定向到  展示加入的商品信息页面*/
     res.redirect(`/cart/addSuc?id=${id}&num=${num}`)
   } else {
-    //已登录
+    //todo 登录状态操作
   }
 }
 
@@ -85,7 +85,7 @@ exports.list = (req, res, next) => {
             name: item.name,
             price: item.price,
             thumbnail: item.thumbnail,
-            amount:item.amount,
+            amount: item.amount,
             num: +cartList[i].num  //结果的顺序和cartList的数据顺序一致的
           }))
         })
@@ -93,7 +93,7 @@ exports.list = (req, res, next) => {
       res.json({code: 500, msg: '获取购物车信息失败'})
     })
   } else {
-
+    //todo 登录状态操作
   }
 }
 
@@ -111,8 +111,27 @@ exports.edit = (req, res, next) => {
     res.cookie(configs.cookieCart.key, JSON.stringify(cartList), {expires})
     res.json({code: 200, msg: '修改成功'})
   } else {
-
+    //todo 登录状态操作
   }
 }
 
 //删除 接口
+exports.remove = (req, res, next) => {
+  if(!req.session.user){
+    //删除需要 id  post提交
+    const id = req.body.id
+    //获取
+    const cartCookie = req.cookies[configs.cookieCart.key] || '[]'
+    const cartList = JSON.parse(cartCookie)
+    //删除
+    const index = cartList.findIndex((item, i) => item.id == id)
+    cartList.splice(index, 1)
+    //存储
+    const expires = new Date(Date.now() + configs.cookieCart.expires)
+    res.cookie(configs.cookieCart.key, JSON.stringify(cartList), {expires})
+    //响应  json
+    res.json({code:200,msg:'删除成功'})
+  }else{
+    //todo 登录状态操作
+  }
+}
