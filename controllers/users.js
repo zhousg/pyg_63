@@ -35,10 +35,12 @@ exports.loginLogic = (req, res, next) => {
     /*4.1 确认 在客户端存储什么信息  user id password*/
     /*4.2 使用cookie进行存储  设置有效期  7天 */
     /*4.3 以后需要使用这些数据进行自动登录*/
-    res.cookie(configs.cookieUser.key, JSON.stringify({
-      id: user.id,
-      password: user.password
-    }), {expires: new Date(Date.now() + configs.cookieUser.expires), httpOnly: true})
+    if(auto){
+      res.cookie(configs.cookieUser.key, JSON.stringify({
+        id: user.id,
+        password: user.password
+      }), {expires: new Date(Date.now() + configs.cookieUser.expires), httpOnly: true})
+    }
     /*5. 合并购物车*/
     /*获取cookie中的购物车数据  包含若干件商品和添加的数量 */
     /*依次遍历  调用添加接口  对应的商品ID及数量 发送接口服务器*/

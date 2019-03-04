@@ -9,17 +9,25 @@ exports.global = (req, res, next) => {
   //思路是  第一次请求的时候缓存数据
   //再次请求去判断是否缓存过数据  去缓存数据
   //缓存了数据
-  if(res.app.locals.categoryList){
+  if (res.app.locals.categoryList) {
     res.locals.categoryList = res.app.locals.categoryList
     next()
-  }else{
+  } else {
     categoryModel.getCategory().then(data => {
       // 1.  req  不可以  每次请求req对象都是新对象
       // 2.  存储在全局变量   ok  不建议
       // 3.  req.app  进行存储  这是我们自己创建的应用对象
-      res.app.locals.categoryList =  data
+      res.app.locals.categoryList = data
       res.locals.categoryList = data
       next()
     }).catch(err => next(err))
   }
+}
+//定义拦截未登录状态
+exports.checkLogin = (req, res, next) => {
+  //没有登录重定向  /order?id=100 包含特殊字符
+  if (!req.session.user){
+    return res.redirect('/login?returnUrl=' + encodeURIComponent(req.url))
+  }
+  next()
 }

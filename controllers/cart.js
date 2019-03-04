@@ -6,6 +6,7 @@
 //如果登录成  session  往里面存用户信息  字段约定 user
 const configs = require('../configs')
 const productModel = require('../models/product')
+const cartModel = require('../models/cart')
 
 exports.addCart = (req, res, next) => {
   //参数 商品ID
@@ -37,7 +38,11 @@ exports.addCart = (req, res, next) => {
     /*5. 重定向到  展示加入的商品信息页面*/
     res.redirect(`/cart/addSuc?id=${id}&num=${num}`)
   } else {
-    //todo 登录状态操作
+    //登录状态操作
+    cartModel.add(req.session.user.id, id, num)
+      .then(data => {
+        res.redirect(`/cart/addSuc?id=${id}&num=${num}`)
+      }).catch(err => next(err))
   }
 }
 
@@ -93,7 +98,26 @@ exports.list = (req, res, next) => {
       res.json({code: 500, msg: '获取购物车信息失败'})
     })
   } else {
-    //todo 登录状态操作
+    //登录状态操作
+    cartModel.list(req.session.user.id)
+      .then(data => {
+        res.json({
+          code: 200,
+          data: data.map((item, i) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            thumbnail: item.thumbnail,
+            amount: 100,
+            num: item.amount
+          }))
+        })
+      }).catch(err => {
+      res.json({
+        code: 200,
+        data: []
+      })
+    })
   }
 }
 
@@ -111,15 +135,21 @@ exports.edit = (req, res, next) => {
     res.cookie(configs.cookieCart.key, JSON.stringify(cartList), {expires})
     res.json({code: 200, msg: '修改成功'})
   } else {
-    //todo 登录状态操作
+    //登录状态操作
+    cartModel.edit(req.session.user.id, id, num)
+      .then(data => {
+        res.json({code: 200, msg: '修改成功'})
+      }).catch(err => {
+      res.json({code: 500, msg: '修改失败'})
+    })
   }
 }
 
 //删除 接口
 exports.remove = (req, res, next) => {
-  if(!req.session.user){
-    //删除需要 id  post提交
-    const id = req.body.id
+  //删除需要 id  post提交
+  const id = req.body.id
+  if (!req.session.user) {
     //获取
     const cartCookie = req.cookies[configs.cookieCart.key] || '[]'
     const cartList = JSON.parse(cartCookie)
@@ -130,8 +160,14 @@ exports.remove = (req, res, next) => {
     const expires = new Date(Date.now() + configs.cookieCart.expires)
     res.cookie(configs.cookieCart.key, JSON.stringify(cartList), {expires})
     //响应  json
-    res.json({code:200,msg:'删除成功'})
-  }else{
-    //todo 登录状态操作
+    res.json({code: 200, msg: '删除成功'})
+  } else {
+    //登录状态操作
+    cartModel.remove(req.session.user.id, id)
+      .then(data => {
+        res.json({code: 200, msg: '删除成功'})
+      }).catch(err => {
+      res.json({code: 500, msg: '删除失败'})
+    })
   }
 }
