@@ -7,6 +7,7 @@ const itemController = require('./controllers/item')
 const cartController = require('./controllers/cart')
 const usersController = require('./controllers/users')
 const orderController = require('./controllers/order')
+const payController = require('./controllers/pay')
 const middlewares = require('./middlewares')
 
 //渲染首页
@@ -31,10 +32,16 @@ router.post('/cart/remove', cartController.remove)
 
 //用户相关
 router.get('/login', usersController.login)
+router.get('/logout', usersController.logout)
 router.post('/login', usersController.loginLogic)
 
 //订单相关
 router.get('/checkout', middlewares.checkLogin, orderController.checkout)  //结算页面
+router.get('/order/add', middlewares.checkLogin, orderController.add)  //结算页面
+router.get('/order', middlewares.checkLogin, orderController.list)  //结算页面
+
+router.get('/pay', middlewares.checkLogin, payController.pay)
+router.get('/pay/callback', middlewares.checkLogin, payController.callback)
 
 //todo 配置网站所有的路由
 

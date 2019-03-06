@@ -110,6 +110,9 @@
           //修改小计
           $(this).parent().next().find('span').html('￥' + (product.num * product.price).toFixed(2))
           calcAmount()
+
+          //注意：头部的购物车数量更新
+          $('.shopnum').html(list.reduce((prev, item) => prev + parseInt(item.num), 0))
         } else {
           alert(data.msg)
         }
@@ -130,6 +133,14 @@
         }
       })
     })
+    //点击结算
+    $('.sum-btn').on('click', function () {
+      var items = []
+      $('.cart-list [type="checkbox"]:checked').each(function () {
+        items.push(this.dataset.id)
+      })
+      location.href = '/order/add?items=' + items.join(',')
+    })
   })
 </script>
 {{/block}}
@@ -138,7 +149,8 @@
     <br>
     {{if !user}}
     <div class="sui-msg msg-large msg-block msg-warning">
-        <div class="msg-con">您还没有登录！登录后购物车的商品将保存到您账号中 <a href="/login?returnUrl=/cart" class="sui-btn btn-danger">立即登录</a></div>
+        <div class="msg-con">您还没有登录！登录后购物车的商品将保存到您账号中 <a href="/login?returnUrl=/cart"
+                                                         class="sui-btn btn-danger">立即登录</a></div>
         <s class="msg-icon"></s>
     </div>
     {{/if}}
@@ -167,7 +179,7 @@
                     <span><em>总价（不含运费）：</em><i class="summoney">¥00.00</i></span>
                 </div>
                 <div class="sumbtn">
-                    <a class="sum-btn" href="/checkout">结算</a>
+                    <a class="sum-btn" href="javascript:;">结算</a>
                 </div>
             </div>
         </div>

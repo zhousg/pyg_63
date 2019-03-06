@@ -9,7 +9,7 @@ exports.add = (userId, id, num) => {
 }
 
 //查询
-exports.list = (userId, id, num) => {
+exports.list = (userId) => {
   return axios.get(`/users/${userId}/cart`)
     .then(res => res.data)
     .catch(err => Promise.reject(err))

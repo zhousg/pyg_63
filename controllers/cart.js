@@ -65,7 +65,6 @@ exports.addCartSuc = (req, res, next) => {
 
 //展示购物车页面 不包含数据
 exports.index = (req, res, next) => {
-  res.locals.user = req.session.user
   res.render('cart')
 }
 

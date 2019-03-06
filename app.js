@@ -14,7 +14,7 @@ const express = require('express')
 
 const app = express()
 
-app.listen(4000, () => console.log('pyg_63 server started'))
+app.listen(3000, () => console.log('pyg_63 server started'))
 
 //配置模版引擎
 app.engine('art', artTemplate)
@@ -52,7 +52,7 @@ app.use(session({
 app.use(cookieParser())
 
 //自定义的中间件
-app.use(middlewares.global)
+app.use(middlewares.global,middlewares.headCart)
 
 //定义的业务路由
 app.use(routers)
